@@ -1,0 +1,1 @@
+angular.module('app').constant('navModel', {'Aleph': '/aleph', 'Bet': '/bet'});
