@@ -1,5 +1,4 @@
-.idea/
-app/components
+components
 build
 node_modules
-app/styles/*.css
+styles/*.css

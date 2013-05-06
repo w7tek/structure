@@ -8,15 +8,7 @@ describe('MyCtrl2', function(){
 
   it('should be injected correctly', function(){
     expect(ctrl).not.to.be(undefined);
-    expect(scope.people.length).to.be(3);
-  });
-
-  describe('longestName computed property', function(){
-    it('should return the longest name', function(){
-      expect(scope.longestName()).to.be('Jimmies');
-      scope.people.push('Jimmyjim');
-      expect(scope.longestName()).to.be('Jimmyjim');
-    });
+    expect(scope.people.length).to.be(36);
   });
 
   describe('mocking a depdendency', function(){
