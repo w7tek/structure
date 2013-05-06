@@ -1,5 +1,5 @@
 /* Declare app module that has dependency on ngResource */
-angular.module('app', ['ngResource']).
+angular.module('app', []).
     config(function (navModel, $routeProvider, $locationProvider) {
         $locationProvider.html5Mode(true);
         //setup URL routes

@@ -1,10 +1,8 @@
 module.exports = function (grunt) {
     //grunt plugins
     grunt.loadNpmTasks('grunt-angular-templates');
-    grunt.loadNpmTasks('grunt-bower');
     grunt.loadNpmTasks('grunt-clear');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
@@ -12,7 +10,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-stylus');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-git-describe');
     grunt.loadNpmTasks('grunt-htmlrefs');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-ngmin');
@@ -52,15 +49,15 @@ module.exports = function (grunt) {
 
         //delete the previous build and generated directories
         clean: {
-            build: 'build',
-            generated: ['build/generated', 'styles/app.css']
+            build: 'build'
         },
 
         //copy images to the build
         copy: {
             img: {
-                src: ['img/**'],
-                dest: 'build/img/'
+                files: {
+                    'build/': ['img/**']
+                }
             }
         },
 
@@ -68,35 +65,22 @@ module.exports = function (grunt) {
         ngtemplates: {
             app: {
                 options: {base: '.'},
-                src: ['templates/**/*.html'],
-                dest: 'build/generated/ngtemplates.js'
-            }
-        },
-
-        'git-describe': {
-            build: {
-                options: {
-                    prop: "git.buildnumber"
+                files: {
+                    'build/generated/ngtemplates.js': ['templates/**/*.html']
                 }
             }
         },
 
         //replace all the script tags in the HTML file with the single built script
         htmlrefs: {
-            options: {
-                file: {
-                    buildNumber: "<%= git.buildnumber %>"
-                }
-            },
             build: {
-                src: 'index.html',
-                dest: 'build/'
+                files: { 'build/generated/': 'index.html' }
             }
         },
 
         //convert our Angular files that use simple injects to their build-safe versions
         ngmin: {
-            app: {
+            build: {
                 expand: true,
                 cwd: 'js',
                 src: ['**/*.js', '!build/', '!components/'],
@@ -112,32 +96,23 @@ module.exports = function (grunt) {
                     collapseWhitespace: true
                 },
                 files: {
-                    'build/index.html': ['build/index.html']
+                    'build/index.html': ['build/generated/index.html']
                 }
-            }
-        },
-
-        bower: {
-            dev: {
-                dest: 'build/components'
-            }
-        },
-
-        //combine all JS into one file, all CSS into one file
-        concat: {
-            js: {
-                src: [
-                    'build/components/*.js',
-                    'build/generated/**/*.js' //all our angular components, including templates
-                ],
-                dest: 'build/app.js'
             }
         },
 
         //minify the JS file to be as small as possible
         uglify: {
-            app: {
-                'build/app.js': ['build/app.js']
+            build: {
+                options: {
+                    report: 'min'
+                },
+                files: {
+                    'build/app.js': [
+                        'components/angular-1.1.4/angular.js',
+                        'build/generated/**/*.js' //all our angular components, including templates
+                    ]
+                }
             }
         },
 
@@ -197,13 +172,9 @@ module.exports = function (grunt) {
         'copy',
         'ngtemplates',
         'ngmin',
-        'bower',
-        'concat',
         'uglify',
-        'git-describe',
         'htmlrefs',
-        'htmlmin',
-//        'clean:generated'
+        'htmlmin'
     ]);
     // 'dev' task calls 'regarde' which indirectly calls 'karma:unit:run'. This expects to connect to a karma server on port 9100.
     // therefore, be sure to run the karma:unit task in a separate console when running the dev task.
